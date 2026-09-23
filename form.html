@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <label for="txt1"> enter your name: </label><br>
+        <input type="text" name="fname" id="txt1"
+        minlength="2" maxlength="30" pattern="^[a-zA-z ]{2, 30}$" required><br>
+        <label for="txt2">enter your password:</label><br>
+        <input type="password" name="pass" id="txt2"
+        pattern="^(?=.*[0-9])(?=.*[!@#$%&])[a-zA-z0-9!@#$%&*]{8,16}$" required><br>
+        <label for="email">Enter your email:</label><br>
+        <input type="email" name="uemail" required><br>
+        <label for="contact">Enter your contact:</label><br>
+        <input type="tel" name="contact" required ><br>
+        <label for="age">Enter your age:</label><br>
+        <input type="number" name="age" id="age" required><br>
+        <label for="DOB">Enter your DOB</label><br>
+        <input type="date" id="DOB" name="udob" required><br>
+        <label for="gender">Select Your Gender:</label><br>
+        <input type="radio" name="gender" value="male">male
+        <input type="radio" name="gender" value="female">female
+        <input type="radio" name="gender" value="not disclosed">can't disclose<br>
+        <label for="edu">Select Your Qualification:</label><br>
+        <input type="checkbox" name="edu" id="ssc">SSC
+        <input type="checkbox" name="edu" id="hsc">HSC
+        <input type="checkbox" name="edu" id="ug">UG
+        <input type="checkbox" name="edu" id="pg">PG
+        <input type="checkbox" name="edu" id="phd">PHD <br>
+        <label for="course">Select your course:</label><br>
+        <select name="course" id="">
+            <option value="aiml">AIML</option>
+            <option value="cs">CS</option>
+            <option value="it">IT</option>
+            <option value="entc">E&TC</option>
+            <option value="webdev">WebDev</option>
+            <option value="frontend">Webdes</option>
+            <option value="Backend">backend</option>
+        </select><br>
+        <label for="fees">Fees:</label>
+        <input type="text" name="fees" disabled value="1000000"><br>
+        <label for="feedback">Please give your feedback</label><br>
+        <textarea name="feedback" id="feedback" required></textarea><br>
+        <button type="submit">submit</button>
+        <button type="reset">reset</button>
+    </form>
+    
+</body>
+</html>

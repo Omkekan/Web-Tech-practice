@@ -1,0 +1,125 @@
+/* Global Styles */
+body {
+    margin: 0;
+    font-family: 'Georgia', serif;
+    background-color: #FFF8E7;
+    color: #333;
+    line-height: 1.6;
+}
+
+h1, h2 {
+    margin: 0;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scrollText {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+.animate-fade {
+    animation: fadeIn 1.2s ease-out forwards;
+    opacity: 0; /* Ensures elements are hidden before animation starts */
+}
+
+/* Section Containers */
+.section {
+    padding: 40px 20px;
+    margin-bottom: 5px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.header-bg { background-color: #FFFDF9; border-bottom: 2px solid #EADDCB; }
+.desc-bg { background-color: #F5EBE1; text-align: center; font-size: 1.1em; }
+.table-bg { background-color: #FFFDF9; display: flex; justify-content: center; }
+.media-bg { background-color: #FDF8F5; padding: 40px; }
+
+/* Modern Scrolling Text (Replaces Marquee) */
+.special-bar {
+    background-color: #EADDCB;
+    color: #5c4326;
+    padding: 15px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+.scrolling-text {
+    display: inline-block;
+    font-size: 1.5em;
+    font-weight: bold;
+    animation: scrollText 15s linear infinite;
+}
+
+/* Table Styling */
+table {
+    border-collapse: collapse;
+    width: 80%;
+    max-width: 800px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+caption {
+    font-size: 1.5em;
+    padding: 15px;
+    background-color: #EADDCB;
+    font-weight: bold;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+th { background-color: #f7ede2; }
+
+/* Table Hover Animation */
+tbody tr { transition: background-color 0.3s, transform 0.2s; }
+tbody tr:hover {
+    background-color: #fff4e6;
+    transform: scale(1.02);
+    cursor: pointer;
+}
+
+img {
+    border-radius: 8px;
+    transition: transform 0.3s;
+}
+
+img:hover { transform: scale(1.2); }
+
+/* Media Grid Layout */
+.media-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    justify-items: center;
+    align-items: start;
+}
+
+.media-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    text-align: center;
+    width: 100%;
+    max-width: 560px;
+}
+
+iframe, video {
+    border-radius: 8px;
+    max-width: 100%;
+}

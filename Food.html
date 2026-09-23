@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Menu</title>
+    <!-- This links to your external CSS file -->
+    <link rel="stylesheet" href="food.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="section header-bg animate-fade">
+        <h1>FOOD MENU 🤤</h1>
+    </header>
+    
+    <!-- Description Section -->
+    <section class="section desc-bg animate-fade" style="animation-delay: 0.2s;">
+        <p><i>
+            The <b>a la carte menu</b> is a classic menu that offers a diverse selection of individually priced dishes, <br>
+            allowing patrons to choose items based on their preferences.<br>
+            From appetizers to main courses and desserts, each dish is priced separately,<br>
+            granting diners the freedom to create their own personalized meal.<br>
+            The menu style is ideal for those who prefer flexibility and enjoy exploring a wide range of culinary options.
+        </i></p>
+    </section>
+
+    <!-- Animated Special Bar -->
+    <div class="special-bar animate-fade" style="animation-delay: 0.4s;">
+        <div class="scrolling-text">
+            Today's Special "Pastery" &nbsp;&nbsp;&nbsp; 🍰 &nbsp;&nbsp;&nbsp; Today's Special "Pastery" &nbsp;&nbsp;&nbsp; 🍰 &nbsp;&nbsp;&nbsp; Today's Special "Pastery"
+        </div>
+    </div>
+
+    <!-- Menu Table Section -->
+    <section class="section table-bg animate-fade" style="animation-delay: 0.6s;">
+        <table>
+            <caption>Today's menu</caption>
+            <thead>
+                <tr align="center">
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Picture</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr align="center">
+                    <th scope="row">001</th>
+                    <td>Burger</td>
+                    <td>220</td>
+                    <td><img src="../Assets/burgur.jpg" alt="burger" width="65"></td>
+                </tr>
+                <tr align="center">
+                    <th scope="row">002</th>
+                    <td>Cold Coffee</td>
+                    <td>440</td>
+                    <td><img src="../Assets/cold coffee.jpg" alt="Cold Coffee" width="65"></td>
+                </tr>
+                <tr align="center">
+                    <th scope="row">003</th>
+                    <td>Ice cream</td>
+                    <td>1000</td>
+                    <td><img src="../Assets/ice ceram.jpg" alt="Ice Cream" width="65"></td>
+                </tr>
+                <tr align="center">
+                    <th scope="row">004</th>
+                    <td>Masala Paneer</td>
+                    <td>195</td>
+                    <td><img src="../Assets/paneer.jpg" alt="Masala Paneer" width="65"></td>
+                </tr>
+                <tr align="center">
+                    <th scope="row">005</th>
+                    <td>Pastery</td>
+                    <td>550</td>
+                    <td><img src="../Assets/pestry.jpg" alt="pastery" width="65"></td>
+                </tr>
+                <tr align="center">
+                    <th scope="row">006</th>
+                    <td>Pizza</td>
+                    <td>120</td>
+                    <td><img src="../Assets/pizza.jpg" alt="Pizza" width="65"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+    <nav>
+        <a href="./foodbill.html" target="_blank">Bill check out</a>
+    </nav>
+
+    <!-- Media Section -->
+    <section class="section media-bg animate-fade" style="animation-delay: 0.8s;">
+        <div class="media-container">
+            
+            <div class="media-card">
+                <h2>Local Video</h2>
+                <video controls src="Assets/food.mp4" height="315" width="100%" autoplay muted></video>
+            </div>
+
+            <div class="media-card">
+                <h2>YouTube Feature</h2>
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/eHTXQW58WhA?si=vvprCh0SlI-BCCQ-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+
+            <div class="media-card">
+                <h2>Location Map</h2>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5961.723586853026!2d72.83159279055938!3d18.927518835471286!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7d1e9f504be77%3A0x730fa90710fff568!2sYashwantrao%20Chavan%20Centre!5e0!3m2!1sen!2sin!4v1790071947632!5m2!1sen!2sin" width="100%" height="315" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+
+            <div class="media-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2>Atmosphere Audio</h2>
+                <audio controls src="Assets/sitar.mp3" style="width: 100%; margin-top: 20px;"></audio>
+            </div>
+
+        </div>
+    </section>
+
+</body>
+</html>

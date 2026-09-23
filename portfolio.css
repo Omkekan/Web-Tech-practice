@@ -1,0 +1,180 @@
+
+  :root {
+    --bg: #F5F5F5;
+    --surface: #171a22;
+    --surface-2: #1e2029;
+    --border: #2a2d38;
+    --text: #e9e7e2;
+    --text-muted: #8b93a1;
+    --accent: #7dd3c0;
+    --accent-warm: #f0b429;
+    --dot-red: #e0645c;
+    --dot-amber: #e0b04c;
+
+    font-family: "Short Stack", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }
+  .body1{
+    width: 80%;
+    justify-content: center;
+  }
+  .j{
+    color: #171a22;
+    
+  }
+
+  .body2{
+    width: 80%;
+  }
+
+  .gh-card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+
+  .gh-card__titlebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .gh-card__dot { width: 9px; height: 9px; border-radius: 50%; }
+  .gh-card__dot--red { background: var(--dot-red); }
+  .gh-card__dot--amber { background: var(--dot-amber); }
+  .gh-card__dot--green { background: var(--dot-green); }
+
+  .gh-card__path {
+    margin-left: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .gh-card__body { padding: 20px; }
+
+  .gh-card__profile {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .gh-card__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .gh-card__name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .gh-card__handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    margin: 2px 0 0;
+  }
+
+  .gh-card__bio {
+    margin: 8px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .gh-card__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .gh-card__stat {
+    background: var(--surface);
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .gh-card__stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .gh-card__stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .gh-card__lang-bar {
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    background: var(--surface-2);
+  }
+
+  .gh-card__lang-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .gh-card__lang-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .gh-card__lang-swatch {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+
+  .gh-card__link {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.15s ease;
+  }
+
+  .gh-card__link:hover { border-color: var(--accent); }
+
+  .gh-card__status {
+    padding: 32px 20px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+  }

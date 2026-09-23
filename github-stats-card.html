@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<!--
+  GITHUB STATS CARD — drop-in widget
+  ===================================
+  This file is a working demo. To use it on your own portfolio site, copy
+  three things into your existing page:
+    1. The Google Fonts <link> tags below (or your own font setup)
+    2. The <style> block
+    3. The <div id="github-card"></div> and the <script> block
+
+  Then just change USERNAME near the bottom of the script.
+
+  Notes:
+  - Uses GitHub's public REST API — no auth token, no backend needed.
+  - Unauthenticated requests are capped at 60/hour per visitor IP. Fine for
+    normal portfolio traffic; if you outgrow it, proxy the request through
+    a small serverless function with a personal access token.
+  - Only pulls the first 100 repos (plenty for stats purposes).
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GitHub Stats Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1319;
+    --surface: #171a22;
+    --surface-2: #1e2029;
+    --border: #2a2d38;
+    --text: #e9e7e2;
+    --text-muted: #8b93a1;
+    --accent: #7dd3c0;
+    --accent-warm: #f0b429;
+    --dot-red: #e0645c;
+    --dot-amber: #e0b04c;
+    --dot-green: #5fbf76;
+  }
+
+  body {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 48px 16px;
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .gh-card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+
+  .gh-card__titlebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .gh-card__dot { width: 9px; height: 9px; border-radius: 50%; }
+  .gh-card__dot--red { background: var(--dot-red); }
+  .gh-card__dot--amber { background: var(--dot-amber); }
+  .gh-card__dot--green { background: var(--dot-green); }
+
+  .gh-card__path {
+    margin-left: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .gh-card__body { padding: 20px; }
+
+  .gh-card__profile {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .gh-card__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .gh-card__name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .gh-card__handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    margin: 2px 0 0;
+  }
+
+  .gh-card__bio {
+    margin: 8px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .gh-card__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .gh-card__stat {
+    background: var(--surface);
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .gh-card__stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .gh-card__stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .gh-card__lang-bar {
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    background: var(--surface-2);
+  }
+
+  .gh-card__lang-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .gh-card__lang-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .gh-card__lang-swatch {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+
+  .gh-card__link {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.15s ease;
+  }
+
+  .gh-card__link:hover { border-color: var(--accent); }
+
+  .gh-card__status {
+    padding: 32px 20px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<div id="github-card"></div>
+
+<script>
+(function () {
+  const LANG_COLORS = {
+    JavaScript: '#f1e05a', TypeScript: '#3178c6', Python: '#3572A5',
+    Java: '#b07219', 'C++': '#f34b7d', C: '#555555', 'C#': '#178600',
+    PHP: '#4F5D95', Ruby: '#701516', Go: '#00ADD8', Rust: '#dea584',
+    Swift: '#F05138', Kotlin: '#A97BFF', HTML: '#e34c26', CSS: '#563d7c',
+    Shell: '#89e051', Vue: '#41b883', Dart: '#00B4AB'
+  };
+  const FALLBACK_COLOR = '#8b93a1';
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  function renderStatus(container, message) {
+    container.innerHTML = `<div class="gh-card"><div class="gh-card__status">${escapeHtml(message)}</div></div>`;
+  }
+
+  async function renderGitHubCard(username, containerId) {
+    const container = document.getElementById(containerId);
+    renderStatus(container, `$ fetching @${username}...`);
+
+    let profile, repos;
+    try {
+      const profileRes = await fetch(`https://api.github.com/users/${username}`);
+      if (profileRes.status === 404) return renderStatus(container, `user "${username}" not found`);
+      if (!profileRes.ok) return renderStatus(container, `GitHub API error (${profileRes.status}) — likely rate limited, try again shortly`);
+      profile = await profileRes.json();
+
+      const reposRes = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=pushed`);
+      repos = reposRes.ok ? await reposRes.json() : [];
+    } catch (err) {
+      return renderStatus(container, 'network error — could not reach GitHub');
+    }
+
+    const ownRepos = repos.filter(r => !r.fork);
+    const totalStars = ownRepos.reduce((sum, r) => sum + (r.stargazers_count || 0), 0);
+
+    const langCounts = {};
+    ownRepos.forEach(r => {
+      if (r.language) langCounts[r.language] = (langCounts[r.language] || 0) + 1;
+    });
+    const totalLangCount = Object.values(langCounts).reduce((a, b) => a + b, 0);
+    const topLangs = Object.entries(langCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4)
+      .map(([name, count]) => ({
+        name,
+        pct: totalLangCount ? Math.round((count / totalLangCount) * 100) : 0,
+        color: LANG_COLORS[name] || FALLBACK_COLOR
+      }));
+
+    const langBar = topLangs.map(l =>
+      `<div style="width:${l.pct}%; background:${l.color};"></div>`
+    ).join('');
+
+    const langLegend = topLangs.map(l => `
+      <div class="gh-card__lang-item">
+        <span class="gh-card__lang-swatch" style="background:${l.color}"></span>
+        ${escapeHtml(l.name)} · ${l.pct}%
+      </div>
+    `).join('');
+
+    container.innerHTML = `
+      <div class="gh-card">
+        <div class="gh-card__titlebar">
+          <span class="gh-card__dot gh-card__dot--red"></span>
+          <span class="gh-card__dot gh-card__dot--amber"></span>
+          <span class="gh-card__dot gh-card__dot--green"></span>
+          <span class="gh-card__path">~/${escapeHtml(username)}/profile</span>
+        </div>
+        <div class="gh-card__body">
+          <div class="gh-card__profile">
+            <img class="gh-card__avatar" src="${profile.avatar_url}" alt="${escapeHtml(profile.login)}">
+            <div>
+              <p class="gh-card__name">${escapeHtml(profile.name || profile.login)}</p>
+              <p class="gh-card__handle">@${escapeHtml(profile.login)}</p>
+            </div>
+          </div>
+          ${profile.bio ? `<p class="gh-card__bio">${escapeHtml(profile.bio)}</p>` : ''}
+
+          <div class="gh-card__stats">
+            <div class="gh-card__stat">
+              <div class="gh-card__stat-value">${profile.public_repos}</div>
+              <div class="gh-card__stat-label">Repositories</div>
+            </div>
+            <div class="gh-card__stat">
+              <div class="gh-card__stat-value">${totalStars}</div>
+              <div class="gh-card__stat-label">Stars</div>
+            </div>
+            <div class="gh-card__stat">
+              <div class="gh-card__stat-value">${profile.followers}</div>
+              <div class="gh-card__stat-label">Followers</div>
+            </div>
+            <div class="gh-card__stat">
+              <div class="gh-card__stat-value">${profile.following}</div>
+              <div class="gh-card__stat-label">Following</div>
+            </div>
+          </div>
+
+          ${topLangs.length ? `
+            <div class="gh-card__lang-bar">${langBar}</div>
+            <div class="gh-card__lang-legend">${langLegend}</div>
+          ` : ''}
+
+          <a class="gh-card__link" href="${profile.html_url}" target="_blank" rel="noopener">
+            view full profile on github
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---- CHANGE THIS ----
+  const USERNAME = 'Omkekan';
+  // ----------------------
+
+  renderGitHubCard(USERNAME, 'github-card');
+})();
+</script>
+
+</body>
+</html>
