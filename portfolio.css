@@ -15,6 +15,13 @@
     font-weight: 400;
     font-style: normal;
   }
+  .Profile{
+    padding: 10px 0px 0px 0px;
+    align-items: center;
+    border-radius: 50%;
+    width: 5%;
+  }
+
   .body1{
     width: 80%;
     justify-content: center;
