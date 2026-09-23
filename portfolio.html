@@ -31,21 +31,18 @@
 
     <h2 align="center">About</h2>
     <section>
-    <table align="center" width="80%">
-        <tr>
-            <td>
-                <p align="justify">
-                    AI/ML Engineer with hands-on, end-to-end machine learning experience from data preprocessing with Pandas and NumPy to deploying agentic GenAI pipelines and automated analysis tools. Proficient in Python, TensorFlow, and PyTorch, with a growing specialization in Large Language Models, Retrieval-Augmented Generation (RAG), and applied Generative AI. Builds evaluation-driven systems that quantify and improve model reliability rather than relying on anecdotal testing.
-                </p>
-            </td>
-        </tr>
-    </table>
-</section>
+        <div class="content">
+            <p style="text-align: justify;">
+                AI/ML Engineer with hands-on, end-to-end machine learning experience from data preprocessing with Pandas and NumPy to deploying agentic GenAI pipelines and automated analysis tools. Proficient in Python, TensorFlow, and PyTorch, with a growing specialization in Large Language Models, Retrieval-Augmented Generation (RAG), and applied Generative AI. Builds evaluation-driven systems that quantify and improve model reliability rather than relying on anecdotal testing.
+            </p></div>
+    </section>
 
 
 <hr>
 <h2 align="center">Experience</h2>
+
 <h3 align="center">Operational Assistant Intern — Inspira Technologies </h3>
+
 <ul class="body1" >
     <li align="justify" width="60%">Developed and maintained backend services in Python and Flask, building and testing API endpoints that supported core application
 features and internal workflows.</li>
@@ -54,8 +51,11 @@ backend services to streamline routine interactions.</li>
     <li align="justify">Collaborated with the team on debugging, testing, and code reviews, and contributed to internal documentation to support
 maintainability of the systems built during the internship.</li>
 </ul>
+
 <hr>
+
 <h2 align="center">Technical Skills</h2>
+
 <ul class="body1">
     <li align="justify"><b>languages: </b>Python, Java, JavaScript, SQL, HTML/CSS</li>
     <li align="justify"><b>Machine Learning & AI: </b>TensorFlow, PyTorch, Scikit-learn, NumPy, Pandas, LangChain, LangGraph, RAGAS, Computer Vision, NLP,
@@ -64,15 +64,68 @@ Generative AI, Large Language Models (LLMs)</li>
     <li align="justify"><b>Databases & Tools: </b>MySQL, PostgreSQL, Git, GitHub, Linux </li>
     <li align="justify"><b>Core Competencies: </b>End-to-End ML Deployment, Vulnerability Assessment, Information Security</li>
 </ul>
+
 <hr>
+
 <h2 align="center">Projects</h2>
+
+<h3 align="center">Autonomous RAG Agent with Hallucination Guardrails</h3>
+
+<p align="center"><i>Python, LangChain, LangGraph, Qdrant, Ollama</i> &nbsp;|&nbsp;
+
+<a href="https://github.com/Omkekan/Auto-RAG-Agent-with-Hallucination-Guardrails" target="_blank">GitHub</a></p>
 <ul class="body1">
-    <li></li>
+    <li align="justify">Engineered a self-correcting RAG pipeline in LangGraph, adding retrieval-relevance grading, automatic query rewriting, and post-generation groundedness checks to reduce hallucinated responses versus a naive RAG baseline.</li>
+    <li align="justify">Designed a closed-loop agentic architecture that detects weak retrievals and unsupported answers at runtime and automatically re-queries or regenerates before returning a response, rather than returning a first-pass answer.</li>
+    <li align="justify">Built an evaluation harness using RAGAS (faithfulness, answer relevancy) to benchmark the guarded pipeline against a baseline RAG system, replacing anecdotal testing with quantified reliability metrics.</li>
 </ul>
 
+<h3 align="center">Web Vulnerability Scanner</h3>
+
+<p align="center"><i>Python, Flask, Celery, Redis, Next.js, PostgreSQL</i> &nbsp;|&nbsp;
+
+<a href="https://github.com/Omkekan/Riskreveal-Vulnerability-scanner" target="_blank">GitHub</a></p>
+<ul class="body1">
+    <li align="justify">Built a risk-prioritization engine correlating data across 3+ security feeds (200,000+ CVEs, 1,000+ CWEs), cutting vulnerability noise by an estimated 90% versus raw scanner output.</li>
+    <li align="justify">Architected a high-performance backend with Celery and Redis supporting up to 50 concurrent scans, cutting manual scan-configuration time by over 70% through automation.</li>
+    <li align="justify">Developed a full-stack security dashboard in Next.js with 15+ reusable components, improving development efficiency by 25% and enabling detailed PDF report generation in under 5 seconds.</li>
+</ul>
+
+<h3 align="center">Additional Projects</h3>
+
+<ul class="body1">
+    <li align="justify"><b>Text Classification for News Articles</b> — Python, Scikit-learn, Pandas — trained and evaluated an NLP classification model to categorize news articles by topic.
+    <a href="https://github.com/Omkekan/Text-classification-for-News-Articals" target="_blank">github.com/Omkekan/Text-classification-for-News-Articals</a></li>
+    <li align="justify"><b>Network Scanner</b> — Python, Scapy — built a multithreaded TCP port scanner using SYN scanning to identify open ports and running services on a target host.
+    <a href="https://github.com/Omkekan/network-scanner" target="_blank">github.com/Omkekan/network-scanner</a></li>
+</ul>
 
 <hr>
-<div id="github-card"></div>
+<h2 align="center">Education</h2>
+<p align="center" class="body1">
+    <b>B.Tech, Artificial Intelligence &amp; Machine Learning</b><br>
+    IICT MGMU, Chhatrapati Sambhajinagar, India<br>
+    Oct 2021 – Aug 2026
+</p>
+
+<hr>
+<h2 align="center">Certifications</h2>
+<ul class="body2">
+    <li align="justify">Deep Learning Specialization — DeepLearning.AI (In Progress)</li>
+    <li align="justify">Introduction to Large Language Models — Google</li>
+    <li align="justify">Generative AI Fundamentals — Google</li>
+    <li align="justify">Google Cybersecurity Professional Certificate</li>
+</ul>
+
+<hr>
+
+<div class="social-cards">
+    <div id="github-card"></div>
+    <div id="linkedin-card"></div>
+    <div id="medium-card"></div>
+    <!--<div id="youtube-card"></div>-->
+</div>
+
 
 </body>
 </html>
