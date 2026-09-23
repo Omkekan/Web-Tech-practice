@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<!--
+  YOUTUBE CHANNEL CARD — drop-in widget
+  =======================================
+  YouTube's channel RSS feed is public but needs your channel ID (not
+  just your @handle). Find yours at:
+    YouTube Studio -> Settings -> Channel -> Basic info -> "Channel ID"
+  It looks like: UCxxxxxxxxxxxxxxxxxxxxxx
+
+  Like the Medium card, this routes through rss2json.com to get around
+  the browser's CORS restriction on fetching the raw feed directly.
+
+  Note: the RSS feed only exposes the ~15 most recent uploads — no
+  subscriber or view counts. Getting those live requires the YouTube
+  Data API (a free Google Cloud API key, restricted to your domain) —
+  ask if you want that version built too.
+
+  To use on your portfolio, copy:
+    1. The Google Fonts <link> tags (skip if already added)
+    2. The <style> block (skip the :root block if you already have it)
+    3. The <div id="youtube-card"></div> and the <script> block
+    Then set YOUTUBE_CHANNEL_ID near the bottom of the script.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>YouTube Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1319;
+    --surface: #171a22;
+    --surface-2: #1e2029;
+    --border: #2a2d38;
+    --text: #e9e7e2;
+    --text-muted: #8b93a1;
+    --accent: #7dd3c0;
+    --accent-warm: #f0b429;
+    --dot-red: #e0645c;
+    --dot-amber: #e0b04c;
+    --dot-green: #5fbf76;
+  }
+
+  body {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 48px 16px;
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .yt-card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+
+  .yt-card__titlebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .yt-card__dot { width: 9px; height: 9px; border-radius: 50%; }
+  .yt-card__dot--red { background: var(--dot-red); }
+  .yt-card__dot--amber { background: var(--dot-amber); }
+  .yt-card__dot--green { background: var(--dot-green); }
+
+  .yt-card__path {
+    margin-left: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .yt-card__body { padding: 20px; }
+
+  .yt-card__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .yt-card__logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--accent-warm);
+    flex-shrink: 0;
+  }
+
+  .yt-card__title { margin: 0; font-size: 15px; font-weight: 500; color: var(--text); }
+  .yt-card__subtitle { margin: 2px 0 0; font-size: 12px; color: var(--text-muted); }
+
+  .yt-card__videos {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .yt-card__video {
+    display: flex;
+    gap: 10px;
+    text-decoration: none;
+    align-items: center;
+  }
+
+  .yt-card__thumb {
+    width: 100px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .yt-card__video-title {
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.35;
+    margin: 0 0 4px;
+  }
+
+  .yt-card__video-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .yt-card__link {
+    display: block;
+    margin-top: 16px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.15s ease;
+  }
+
+  .yt-card__link:hover { border-color: var(--accent); }
+
+  .yt-card__status {
+    padding: 32px 20px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<div id="youtube-card"></div>
+
+<script>
+(function () {
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function renderStatus(container, message) {
+    container.innerHTML = `<div class="yt-card"><div class="yt-card__status">${escapeHtml(message)}</div></div>`;
+  }
+
+  async function renderYouTubeCard(channelId, containerId) {
+    const container = document.getElementById(containerId);
+    renderStatus(container, '$ fetching latest uploads...');
+
+    const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
+
+    let data;
+    try {
+      const res = await fetch(apiUrl);
+      data = await res.json();
+      if (data.status !== 'ok') return renderStatus(container, 'channel not found — double check the channel ID');
+    } catch (err) {
+      return renderStatus(container, 'network error — could not reach YouTube');
+    }
+
+    const videos = (data.items || []).slice(0, 3).map(item => `
+      <a class="yt-card__video" href="${item.link}" target="_blank" rel="noopener">
+        <img class="yt-card__thumb" src="${item.thumbnail}" alt="${escapeHtml(item.title)}" onerror="this.style.visibility='hidden'">
+        <div>
+          <p class="yt-card__video-title">${escapeHtml(item.title)}</p>
+          <span class="yt-card__video-date">${formatDate(item.pubDate)}</span>
+        </div>
+      </a>
+    `).join('');
+
+    container.innerHTML = `
+      <div class="yt-card">
+        <div class="yt-card__titlebar">
+          <span class="yt-card__dot yt-card__dot--red"></span>
+          <span class="yt-card__dot yt-card__dot--amber"></span>
+          <span class="yt-card__dot yt-card__dot--green"></span>
+          <span class="yt-card__path">~/youtube/channel</span>
+        </div>
+        <div class="yt-card__body">
+          <div class="yt-card__header">
+            <div class="yt-card__logo">&#9654;</div>
+            <div>
+              <p class="yt-card__title">${escapeHtml(data.feed.title || 'YouTube Channel')}</p>
+              <p class="yt-card__subtitle">Latest uploads</p>
+            </div>
+          </div>
+          <div class="yt-card__videos">${videos || '<div class="yt-card__status">no videos found</div>'}</div>
+          <a class="yt-card__link" href="https://www.youtube.com/channel/${channelId}" target="_blank" rel="noopener">
+            subscribe on youtube
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---- CHANGE THIS ----
+  const YOUTUBE_CHANNEL_ID = 'UCxxxxxxxxxxxxxxxxxxxxxx';
+  // ----------------------
+
+  renderYouTubeCard(YOUTUBE_CHANNEL_ID, 'youtube-card');
+})();
+</script>
+
+</body>
+</html>

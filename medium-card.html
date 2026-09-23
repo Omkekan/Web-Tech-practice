@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<!--
+  MEDIUM PROFILE CARD — drop-in widget
+  ======================================
+  Medium's own feed blocks direct requests from a browser (CORS), so this
+  routes the fetch through rss2json.com, a free public service that
+  converts an RSS feed into browser-friendly JSON. Anonymous use is fine
+  for normal portfolio traffic; for a higher, more reliable rate limit,
+  create a free account at rss2json.com and append &api_key=YOUR_KEY to
+  the fetch URL below.
+
+  If your Medium blog runs on a custom domain instead of medium.com,
+  swap the feedUrl line for: `https://yourdomain.com/feed`
+
+  To use on your portfolio, copy:
+    1. The Google Fonts <link> tags (skip if already added)
+    2. The <style> block (skip the :root block if you already have it)
+    3. The <div id="medium-card"></div> and the <script> block
+    Then set MEDIUM_USERNAME near the bottom of the script.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Medium Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1319;
+    --surface: #171a22;
+    --surface-2: #1e2029;
+    --border: #2a2d38;
+    --text: #e9e7e2;
+    --text-muted: #8b93a1;
+    --accent: #7dd3c0;
+    --accent-warm: #f0b429;
+    --dot-red: #e0645c;
+    --dot-amber: #e0b04c;
+    --dot-green: #5fbf76;
+  }
+
+  body {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 48px 16px;
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .md-card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+
+  .md-card__titlebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .md-card__dot { width: 9px; height: 9px; border-radius: 50%; }
+  .md-card__dot--red { background: var(--dot-red); }
+  .md-card__dot--amber { background: var(--dot-amber); }
+  .md-card__dot--green { background: var(--dot-green); }
+
+  .md-card__path {
+    margin-left: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .md-card__body { padding: 20px; }
+
+  .md-card__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .md-card__logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .md-card__title { margin: 0; font-size: 15px; font-weight: 500; color: var(--text); }
+  .md-card__subtitle { margin: 2px 0 0; font-size: 12px; color: var(--text-muted); }
+
+  .md-card__posts {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .md-card__post {
+    background: var(--surface);
+    padding: 12px;
+    text-decoration: none;
+    display: block;
+    transition: background 0.15s ease;
+  }
+
+  .md-card__post:hover { background: var(--surface-2); }
+
+  .md-card__post-title {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+    margin: 0 0 4px;
+  }
+
+  .md-card__post-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .md-card__link {
+    display: block;
+    margin-top: 16px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.15s ease;
+  }
+
+  .md-card__link:hover { border-color: var(--accent); }
+
+  .md-card__status {
+    padding: 32px 20px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<div id="medium-card"></div>
+
+<script>
+(function () {
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function renderStatus(container, message) {
+    container.innerHTML = `<div class="md-card"><div class="md-card__status">${escapeHtml(message)}</div></div>`;
+  }
+
+  async function renderMediumCard(username, containerId) {
+    const container = document.getElementById(containerId);
+    renderStatus(container, `$ fetching @${username}...`);
+
+    const feedUrl = `https://medium.com/feed/@${username}`;
+    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
+
+    let data;
+    try {
+      const res = await fetch(apiUrl);
+      data = await res.json();
+      if (data.status !== 'ok') return renderStatus(container, `couldn't load @${username}'s Medium feed`);
+    } catch (err) {
+      return renderStatus(container, 'network error — could not reach Medium');
+    }
+
+    const posts = (data.items || []).slice(0, 4).map(item => `
+      <a class="md-card__post" href="${item.link}" target="_blank" rel="noopener">
+        <p class="md-card__post-title">${escapeHtml(item.title)}</p>
+        <span class="md-card__post-date">${formatDate(item.pubDate)}</span>
+      </a>
+    `).join('');
+
+    container.innerHTML = `
+      <div class="md-card">
+        <div class="md-card__titlebar">
+          <span class="md-card__dot md-card__dot--red"></span>
+          <span class="md-card__dot md-card__dot--amber"></span>
+          <span class="md-card__dot md-card__dot--green"></span>
+          <span class="md-card__path">~/${escapeHtml(username)}/medium</span>
+        </div>
+        <div class="md-card__body">
+          <div class="md-card__header">
+            <div class="md-card__logo">M</div>
+            <div>
+              <p class="md-card__title">${escapeHtml(data.feed.title || username)}</p>
+              <p class="md-card__subtitle">Latest articles</p>
+            </div>
+          </div>
+          <div class="md-card__posts">${posts || '<div class="md-card__status">no posts found</div>'}</div>
+          <a class="md-card__link" href="https://medium.com/@${username}" target="_blank" rel="noopener">
+            read more on medium
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---- CHANGE THIS ----
+  const MEDIUM_USERNAME = 'yourusername'; // no @ symbol
+  // ----------------------
+
+  renderMediumCard(MEDIUM_USERNAME, 'medium-card');
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--
+  LINKEDIN PROFILE CARD — drop-in widget
+  =======================================
+  LinkedIn has no public API for reading personal profile data from a
+  browser, so unlike the GitHub card, this one is static — you fill in
+  the details yourself in the DATA object near the bottom of the script,
+  and update it by hand whenever your profile changes.
+
+  To use on your portfolio, copy:
+    1. The Google Fonts <link> tags (skip if already added via the
+       GitHub card)
+    2. The <style> block (skip the :root block if you already have it
+       from the GitHub card — just keep the .li-card rules)
+    3. The <div id="linkedin-card"></div> and the <script> block
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LinkedIn Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1319;
+    --surface: #171a22;
+    --surface-2: #1e2029;
+    --border: #2a2d38;
+    --text: #e9e7e2;
+    --text-muted: #8b93a1;
+    --accent: #7dd3c0;
+    --accent-warm: #f0b429;
+    --dot-red: #e0645c;
+    --dot-amber: #e0b04c;
+    --dot-green: #5fbf76;
+  }
+
+  body {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    padding: 48px 16px;
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .li-card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+
+  .li-card__titlebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .li-card__dot { width: 9px; height: 9px; border-radius: 50%; }
+  .li-card__dot--red { background: var(--dot-red); }
+  .li-card__dot--amber { background: var(--dot-amber); }
+  .li-card__dot--green { background: var(--dot-green); }
+
+  .li-card__path {
+    margin-left: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .li-card__body { padding: 20px; }
+
+  .li-card__profile {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .li-card__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    object-fit: cover;
+  }
+
+  .li-card__name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .li-card__headline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    margin: 2px 0 0;
+  }
+
+  .li-card__bio {
+    margin: 12px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .li-card__facts {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    margin: 16px 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .li-card__fact {
+    background: var(--surface);
+    padding: 9px 12px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+
+  .li-card__fact-label { color: var(--text-muted); }
+  .li-card__fact-value {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+  }
+
+  .li-card__link {
+    display: block;
+    margin-top: 6px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.15s ease;
+  }
+
+  .li-card__link:hover { border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div id="linkedin-card"></div>
+
+<script>
+(function () {
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  function renderLinkedInCard(data, containerId) {
+    const container = document.getElementById(containerId);
+    const facts = data.facts.map(f => `
+      <div class="li-card__fact">
+        <span class="li-card__fact-label">${escapeHtml(f.label)}</span>
+        <span class="li-card__fact-value">${escapeHtml(f.value)}</span>
+      </div>
+    `).join('');
+
+    container.innerHTML = `
+      <div class="li-card">
+        <div class="li-card__titlebar">
+          <span class="li-card__dot li-card__dot--red"></span>
+          <span class="li-card__dot li-card__dot--amber"></span>
+          <span class="li-card__dot li-card__dot--green"></span>
+          <span class="li-card__path">~/linkedin/profile</span>
+        </div>
+        <div class="li-card__body">
+          <div class="li-card__profile">
+            <img class="li-card__avatar" src="${data.avatar}" alt="${escapeHtml(data.name)}">
+            <div>
+              <p class="li-card__name">${escapeHtml(data.name)}</p>
+              <p class="li-card__headline">${escapeHtml(data.headline)}</p>
+            </div>
+          </div>
+          <p class="li-card__bio">${escapeHtml(data.bio)}</p>
+          <div class="li-card__facts">${facts}</div>
+          <a class="li-card__link" href="${data.profileUrl}" target="_blank" rel="noopener">
+            connect on linkedin
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---- EDIT THIS: LinkedIn has no public API, so fill these in by hand ----
+  const LINKEDIN_DATA = {
+    name: 'Om Kekan',
+    headline: 'AI/ML Engineer · Generative AI & LLM Systems',
+    avatar: 'Assets/Profile Picture.jpeg',
+    bio: 'Building evaluation-driven ML systems — from RAG pipelines to production backend services. Open to full-time AI/ML roles.',
+    facts: [
+      { label: 'Location', value: 'Chhatrapati Sambhajinagar, IN' },
+      { label: 'Focus', value: 'LLMs · RAG · GenAI' },
+      { label: 'Status', value: 'Open to work' }
+    ],
+    profileUrl: 'https://linkedin.com/in/omkekan'
+  };
+  // ---------------------------------------------------------------------
+
+  renderLinkedInCard(LINKEDIN_DATA, 'linkedin-card');
+})();
+</script>
+
+</body>
+</html>
