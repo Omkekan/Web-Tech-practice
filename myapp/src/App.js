@@ -7,7 +7,10 @@ import GreetingComp from './component/greetingscomp';
 // Ensure your imports match the exact file names
 import Butinc from './Task/Butinc';
 import Butdec from './Task/Butdec';
-
+import Parentcom from './component/Parentcom';
+import ChildCom from './component/Childcom';
+import Condition from './component/Condition';  
+import Myimgcom from './component/Myimgcom';
 
 function App() {
   return (
@@ -25,6 +28,14 @@ function App() {
       {/* FIXED: Components must start with an uppercase letter */}
       <Butinc />
       <Butdec />
+
+      <Parentcom />
+      <ChildCom />
+      <Condition />
+
+      <Myimgcom />
+
+
     </div>
   );
 }
