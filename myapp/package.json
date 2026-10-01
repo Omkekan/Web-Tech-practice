@@ -7,11 +7,13 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^13.5.0",
+    "bootstrap": "^5.3.8",
     "cors": "^2.8.6",
-    "props": "^0.3.0",
+    "props": "^0.2.3",
     "react": "^19.3.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.3.0",
-    "react-scripts": "^5.0.1",
+    "react-scripts": "^0.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
