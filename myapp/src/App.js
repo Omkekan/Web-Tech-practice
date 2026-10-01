@@ -1,28 +1,30 @@
 import './App.css';
 import FunctionCo from './component/FunctionCo';
 import ClassComp from './component/ClassComp';
+import FriendDetailsComp from './Task/FriendDetailsComp';
+import MydetailsComp from './Task/MydetailsComp';
+import GreetingComp from './component/greetingscomp';
+// Ensure your imports match the exact file names
+import Butinc from './Task/Butinc';
+import Butdec from './Task/Butdec';
+
 
 function App() {
   return (
     <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
       <h1>Welcome You ALL!!</h1>
-      <h4> Its Nice To Meet You!</h4>
-      <FunctionCo/>
+      <h4>It's Nice To Meet You!</h4>
+      <GreetingComp />
+      <FunctionCo Fname="Om" Lname="Kekan"/>
       <ClassComp/>
+      
+      <FriendDetailsComp Fname="Darshan" Lname="Raut" contact={1234567890} Gender="Male" Address="Bane Compound" />
+      
+      <MydetailsComp Fname="Om" Lname="Kekan" Contact={123456789} Gender="Male" Address="Mumbai Central" />
+
+      {/* FIXED: Components must start with an uppercase letter */}
+      <Butinc />
+      <Butdec />
     </div>
   );
 }
