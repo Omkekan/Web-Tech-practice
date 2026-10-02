@@ -1,0 +1,21 @@
+name: Test
+on: [ push, pull_request, workflow_dispatch ]
+jobs:
+  Coverage:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
+    - run: npm install --no-audit
+    - run: npm audit --audit-level=low
+    - run: npx c8 -r lcovonly -r text --check-coverage --100 npm test
+    - uses: coverallsapp/github-action@v2
+      name: Upload to coveralls.io
+      with:
+        github-token: ${{ github.token }}
+  Release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [Coverage]
+    uses: litejs/.github/.github/workflows/release.yml@main
+    secrets: inherit
+

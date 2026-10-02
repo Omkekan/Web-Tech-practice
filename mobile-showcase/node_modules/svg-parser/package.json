@@ -1,0 +1,85 @@
+{
+  "name": "svg-parser",
+  "version": "2.1.0",
+  "description": "Create a JSON-friendly object from an SVG string",
+  "main": "dist/svg-parser.umd.js",
+  "jsnext:main": "dist/svg-parser.esm.js",
+  "module": "dist/svg-parser.esm.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "mocha",
+    "build": "tsdown",
+    "pretest": "npm run build",
+    "prepublishOnly": "npm run lint && npm test",
+    "lint": "oxlint src && oxfmt --check .",
+    "format": "oxfmt --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rich-Harris/svg-parser.git"
+  },
+  "keywords": [
+    "SVG",
+    "parser",
+    "JSON",
+    "object"
+  ],
+  "author": "Rich Harris",
+  "contributors": [
+    {
+      "name": "Bogdan Chadkin",
+      "email": "opensource@trysound.io"
+    }
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=8"
+  },
+  "tsdown": {
+    "entry": {
+      "svg-parser": "src/index.js"
+    },
+    "format": {
+      "esm": {
+        "outputOptions": {
+          "entryFileNames": "[name].esm.js"
+        }
+      },
+      "umd": {
+        "globalName": "svgParser",
+        "outputOptions": {
+          "entryFileNames": "[name].umd.js"
+        }
+      }
+    },
+    "platform": "browser",
+    "target": "es2015",
+    "deps": {
+      "onlyBundle": [
+        "locate-character"
+      ]
+    },
+    "sourcemap": true
+  },
+  "bugs": {
+    "url": "https://github.com/Rich-Harris/svg-parser/issues"
+  },
+  "homepage": "https://github.com/Rich-Harris/svg-parser#README",
+  "overrides": {
+    "debug": "3.2.7",
+    "diff": "3.5.1",
+    "js-yaml": "3.15.1",
+    "minimatch": "3.1.4"
+  },
+  "devDependencies": {
+    "locate-character": "^2.0.5",
+    "mocha": "^7.2.0",
+    "oxfmt": "^0.64.0",
+    "oxlint": "^1.79.0",
+    "source-map-support": "^0.4.2",
+    "tsdown": "^0.22.14"
+  }
+}

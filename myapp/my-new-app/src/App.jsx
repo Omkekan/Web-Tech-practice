@@ -15,6 +15,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Errorboundry from './component/Errorboundry';
 import Usercomp from './component/Usercomp';
 import UseStateHookComp from './hooks/UseStateHookCom';
+import UseEffectHook from './hooks/UseEffectHook';
+import MyFormcom from './component/UseComfun';
+
 
 
 function App() {
@@ -45,9 +48,12 @@ function App() {
       <Condition />
 
       <Myimgcom />
-      
+
       <UseStateHookComp/>
 
+      <UseEffectHook/>
+      <UseEffectHook/>
+      <MyFormcom/>
       <GreetingComp />
     </div>
   );

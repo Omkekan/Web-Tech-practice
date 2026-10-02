@@ -1,0 +1,177 @@
+
+
+describe("naturalCompare", function() {
+	var naturalCompare = require("../")
+
+	var arr1 = [1.001, 1.002, 1.010, 1.02, 1.1, 1.3]
+	, arr2 = [-1.001, -1.002, -1.010, -1.02, -1.1, -1.3]
+	, arr3 = [0.001, 0.002, 0.010, 0.02, 0.1, 0.3]
+	, arr4 = [-0.001, -0.002, -0.010, -0.02, -0.1, -0.3]
+
+	this
+	.should("compare strings as usual", function(assert) {
+		assert
+		.equal( naturalCompare("a", "a"), 0 )
+		.equal( naturalCompare("a", "b"), -1 )
+		.equal( naturalCompare("b", "a"), 1 )
+		.equal( naturalCompare("a", "aa"), -1 )
+		.equal( naturalCompare("aa", "a"), 1 )
+		.equal( naturalCompare("a", "ba"), -1 )
+		.equal( naturalCompare("aa", "b"), -1 )
+		.equal( naturalCompare("aa", "ba"), -1 )
+		.equal( naturalCompare("ba", "a"), 1 )
+		.equal( naturalCompare("b", "aa"), 1 )
+		.equal( naturalCompare("ba", "aa"), 1 )
+		.equal( ["a", "c", "b", "d"].sort(naturalCompare)+"", "a,b,c,d" )
+		.end()
+	})
+
+	.should("compare integers", function(assert) {
+		assert
+		.equal( naturalCompare("a", "a1"), -1 )
+		.equal( naturalCompare("a1", "a"), 1 )
+		.equal( naturalCompare("a", "1"), 1 )
+		.equal( naturalCompare("1", "1"), 0 )
+		.equal( naturalCompare("2", "3"), -1 )
+		.equal( naturalCompare("3", "2"), 1 )
+		.equal( naturalCompare("9", "2"), 1 )
+		.equal( naturalCompare("1", "a"), -1 )
+		.equal( naturalCompare("a1", "a1"), 0 )
+		.equal( naturalCompare("a1", "a2"), -1 )
+		.equal( naturalCompare("a2", "a1"), 1 )
+		.equal( naturalCompare("a1", "a11"), -1 )
+		.equal( naturalCompare("a11","a12"), -1 )
+		.equal( naturalCompare("a12","a11"), 1 )
+		.equal( naturalCompare("a11", "a1"), 1 )
+		.equal( naturalCompare("a1a", "a1"), 1 )
+		.equal( naturalCompare("a1", "a1a"), -1 )
+		.equal( naturalCompare("a1a", "a11"), -1 )
+		.equal( naturalCompare("a11", "a1a"), 1 )
+		.equal( naturalCompare("a11a", "a1a"), 1 )
+		.equal( naturalCompare("a1a", "a11a"), -1 )
+		.equal( ['file-2.txt', 'file-1.txt', 'file-3.txt'].sort(naturalCompare)+"", "file-1.txt,file-2.txt,file-3.txt")
+		.end()
+	})
+
+	.should("work with 0 in string", function(assert) {
+		assert
+		.equal( naturalCompare("a 0 a", "a 0 b"), -1 )
+		.equal( naturalCompare("a 0 a", "a 00 b"), -1 )
+		.equal( naturalCompare("a 0 b", "a 0 a"), 1 )
+		.end()
+	})
+
+	.should("compare positive and negative number", function(assert) {
+		assert
+		.equal( naturalCompare("a 1", "a -1"), 1 )
+		.equal( naturalCompare("a -1", "a 1"), -1 )
+		.equal( naturalCompare("a 2", "a -1"), 1 )
+		.equal( naturalCompare("a -1", "a 2"), -1 )
+		.equal( naturalCompare("a 1", "a -2"), 1 )
+		.equal( naturalCompare("a -2", "a 1"), -1 )
+		.equal( naturalCompare("a -1", "a -1"), 0 )
+		.equal( [-1,1,-2,2,-10,10,-11,11,-100,100].sort(naturalCompare)+"", "-1,-2,-10,-11,-100,1,2,10,11,100" )
+		.end()
+	})
+
+	.should("handle leading zeros on decimal fractions", function(assert) {
+		assert
+		.equal( naturalCompare("1.01", "1.001"), 1 )
+		.equal( naturalCompare("1.001", "1.01"), -1 )
+		.equal(arr1.sort(naturalCompare).join(","), "1.001,1.002,1.01,1.02,1.1,1.3")
+		.equal(arr1.reverse().sort(naturalCompare).join(","), "1.001,1.002,1.01,1.02,1.1,1.3")
+		.equal(arr2.sort(naturalCompare).join(","), "-1.001,-1.002,-1.01,-1.02,-1.1,-1.3")
+		.equal(arr3.sort(naturalCompare).join(","), "0.001,0.002,0.01,0.02,0.1,0.3")
+		.equal(arr4.sort(naturalCompare).join(","), "-0.001,-0.002,-0.01,-0.02,-0.1,-0.3")
+		.end()
+	})
+
+	.should("order punctuation by its mapped code", function(assert) {
+		assert
+		.equal( [ "~", "[", "0", "@", ".", "{", "_", "-", "!", " ", "A", "/", ":", "|", "^", ";" ]
+			.sort(naturalCompare).join(""), " !./:;@[^_{|~-0A" )
+		.equal( naturalCompare(":", "@"), -1 )
+		.equal( naturalCompare("[", "_"), -1 )
+		.equal( naturalCompare("{", "~"), -1 )
+		.equal( naturalCompare("@", "["), -1 )
+		.equal( naturalCompare("_", "{"), -1 )
+		.equal( naturalCompare("~", "-"), -1 )
+		.end()
+	})
+
+	.should("export to String when there is no module", function(assert) {
+		var vm = require("vm")
+		, file = require.resolve("../")
+		, sandbox = { String: {} }
+
+		vm.runInNewContext(require("fs").readFileSync(file, "utf8"), sandbox, { filename: file })
+
+		assert
+		.equal( typeof sandbox.String.naturalCompare, "function" )
+		.equal( sandbox.String.naturalCompare("a", "b"), -1 )
+		.equal( sandbox.String.naturalCompare("a10", "a9"), 1 )
+		.end()
+	})
+
+	.should("accept alphabet", function(assert, mock) {
+		mock.swap(String, "alphabet", "ABDEFGHIJKLMNOPRSŠZŽTUVÕÄÖÜXYabdefghijklmnoprsšzžtuvõäöüxy")
+
+		assert
+		.equal(["a", "ä", "B", "Š", "X", "A", "õ", "z", "1", "2", "9", "10"].sort(naturalCompare).join(""), "12910ABŠXazõä")
+		.end()
+	})
+
+	.should("not hang on prefixes with alphabet", function(assert, mock) {
+		mock.swap(String, "alphabet", "ABDEFGHIJKLMNOPRSZTUVXY")
+
+		assert
+		.equal( naturalCompare("A", "AA"), -1 )
+		.equal( naturalCompare("AA", "A"), 1 )
+		.equal( naturalCompare("X", "XA"), -1 )
+		.equal( naturalCompare("XA", "X"), 1 )
+		.equal( naturalCompare("z", "zB"), -1 )
+		.equal( naturalCompare("z", "z!"), -1 )
+		.equal( ["reportA", "report"].sort(naturalCompare)+"", "report,reportA" )
+		.end()
+	})
+
+	.should("sort in-alphabet chars before the rest", function(assert, mock) {
+		mock.swap(String, "alphabet", "ABDEFGHIJKLMNOPRSŠZŽTUVÕÄÖÜXYabdefghijklmnoprsšzžtuvõäöüxy")
+
+		assert
+		// C, Q, W are not in the Estonian alphabet, D, S, V are
+		.equal( naturalCompare("D", "C"), -1 )
+		.equal( naturalCompare("C", "D"), 1 )
+		.equal( naturalCompare("S", "Q"), -1 )
+		.equal( naturalCompare("V", "W"), -1 )
+		.equal( naturalCompare("Dat", "Cat"), -1 )
+		// digits sort before the alphabet, the alphabet before the rest
+		.equal( naturalCompare("1", "A"), -1 )
+		.equal( naturalCompare("A", "C"), -1 )
+		.equal( naturalCompare("ü", "C"), -1 )
+		.equal( ["C", "D", "1", "õ", "W"].sort(naturalCompare)+"", "1,D,õ,C,W" )
+		.end()
+	})
+
+	.should("keep out-of-alphabet chars distinct", function(assert, mock) {
+		mock.swap(String, "alphabet", "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя")
+
+		assert
+		.equal( naturalCompare("А", "A"), -1 )
+		.equal( naturalCompare("A", "А"), 1 )
+		.equal( naturalCompare("Б", "B"), -1 )
+		.end()
+	})
+
+	.should("ignore an empty alphabet", function(assert, mock) {
+		mock.swap(String, "alphabet", "")
+
+		assert
+		.equal( naturalCompare("a", "b"), -1 )
+		.equal( naturalCompare("foo", "bar"), 1 )
+		.equal( naturalCompare("a", "a1"), -1 )
+		.equal( naturalCompare("a1", "a11"), -1 )
+		.end()
+	})
+})
+
